@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://diqetu8msiduo"]
+
+[ext_resource type="Script" uid="uid://opjtjhn50t2o" path="res://gameplay/camera/camera_controller.gd" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_aqk2v"]
+[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="3_036b0"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_dwbse"]
+[ext_resource type="PackedScene" uid="uid://cfsjo4fh0w2sc" path="res://gameplay/player/player.tscn" id="5_036b0"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gv5m4"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_f3sb7"]
+sky_material = SubResource("ProceduralSkyMaterial_gv5m4")
+
+[sub_resource type="Environment" id="Environment_fj7yv"]
+background_mode = 2
+sky = SubResource("Sky_f3sb7")
+glow_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_wpm6n"]
+size = Vector3(100, 0.2, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wpm6n"]
+size = Vector3(100, 0.2, 100)
+
+[sub_resource type="Resource" id="Resource_pkg7o"]
+script = ExtResource("4_dwbse")
+
+[node name="World" type="Node3D" unique_id=82908611]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=682017872]
+environment = SubResource("Environment_fj7yv")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1656745035]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Map" type="Node3D" parent="." unique_id=1703045631]
+
+[node name="Ground" type="StaticBody3D" parent="Map" unique_id=152774079]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/Ground" unique_id=97804532]
+mesh = SubResource("BoxMesh_wpm6n")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Ground" unique_id=2138848992]
+shape = SubResource("BoxShape3D_wpm6n")
+
+[node name="CameraController" type="Node" parent="." unique_id=1953762110 node_paths=PackedStringArray("camera")]
+script = ExtResource("1_f3sb7")
+camera = NodePath("../PhantomCamera3D")
+metadata/_custom_type_script = "uid://opjtjhn50t2o"
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=504358522]
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7914785, 1)
+top_level = true
+
+[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=1841964260]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("2_aqk2v")
+
+[node name="PhantomCamera3D" type="Node3D" parent="." unique_id=816818561 node_paths=PackedStringArray("follow_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7914785, 1)
+script = ExtResource("3_036b0")
+follow_mode = 6
+follow_target = NodePath("../Player")
+tween_resource = SubResource("Resource_pkg7o")
+follow_offset = Vector3(0, 1.46, 0)
+align_transform_with_view = Callable()
+align_position_with_view = Callable()
+align_rotation_with_view = Callable()
+
+[node name="Player" parent="." unique_id=1948335909 node_paths=PackedStringArray("camera_controller") instance=ExtResource("5_036b0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33147848, 0)
+camera_controller = NodePath("../CameraController")
