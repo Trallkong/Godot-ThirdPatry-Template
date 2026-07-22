@@ -19,11 +19,16 @@ func _physics_process(delta: float) -> void:
 		velocity.y += jump_force
 		
 	
-	var dir := Input.get_vector("move_left", "move_right", "move_backward", "move_forward")
-	var direction := (transform.basis.x * dir.x + -transform.basis.z * dir.y).normalized()
-	if direction:
-		velocity.x = direction.x * walk_speed
-		velocity.z = direction.z * walk_speed
+	var move_input := Input.get_vector("move_left", "move_right", "move_backward", "move_forward")
+	
+	var forward_direction := camera_controller.get_camera_forward_direction()
+	var right_direction := camera_controller.get_camera_right_direction()
+	
+	var move_direction := move_input.x * right_direction + move_input.y * forward_direction
+	
+	if move_direction:
+		velocity.x = move_direction.x * walk_speed
+		velocity.z = move_direction.z * walk_speed
 		skin.speed = walk_speed
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, 10 * delta)
@@ -32,5 +37,7 @@ func _physics_process(delta: float) -> void:
 		
 	move_and_slide()
 	
-	if camera_controller and skin.speed > 0.1:
-		rotation.y = lerp_angle(rotation.y, camera_controller._rot_y, 12.0 * delta)
+	if skin.speed > 0.1:
+		if move_direction:
+			var target_angle = Vector2(move_direction.x, move_direction.z).angle_to(Vector2.UP)
+			rotation.y = lerp_angle(rotation.y, target_angle, 12.0 * delta)

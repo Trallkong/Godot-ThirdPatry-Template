@@ -35,4 +35,8 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			current_distance += 0.2
 				
-		
+func get_camera_forward_direction() -> Vector3:
+	return -camera.global_transform.basis.z
+
+func get_camera_right_direction() -> Vector3:
+	return camera.global_transform.basis.x

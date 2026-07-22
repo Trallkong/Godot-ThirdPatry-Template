@@ -19,10 +19,10 @@ sky = SubResource("Sky_f3sb7")
 glow_enabled = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_wpm6n"]
-size = Vector3(100, 0.2, 100)
+size = Vector3(10, 0.2, 10)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wpm6n"]
-size = Vector3(100, 0.2, 100)
+size = Vector3(10, 0.2, 10)
 
 [sub_resource type="Resource" id="Resource_pkg7o"]
 script = ExtResource("4_dwbse")
